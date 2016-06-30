@@ -1,5 +1,5 @@
 package com.example.spark
-# test commit from eclipse
+// test commit from eclipse
 import kafka.serializer.StringDecoder
 import org.apache.spark.{TaskContext, SparkConf}
 import org.apache.spark.streaming.kafka.{OffsetRange, HasOffsetRanges, KafkaUtils}
