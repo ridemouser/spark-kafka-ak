@@ -66,6 +66,7 @@ object DirectKafkaWordCount {
     // dbutils.fs.put("/tmp/test_kafka_output",data,true)
           val message = new ProducerRecord[String, String](kafkaOpTopic, null, data)      
           producer.send(message)
+          System.out.println("# message = " + message)
         } )
         producer.close()
        })
