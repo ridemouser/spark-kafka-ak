@@ -16,7 +16,7 @@ import java.util.HashMap
 import java.nio.ByteBuffer
 
 object DirectKafkaWordCount {
-  val kafkaBrokers = "localhost:9092"
+  val kafkaBrokers = "kafka:9092"
   def main(args: Array[String]): Unit = {
     if (args.length < 2) {
       System.err.println(s"""
@@ -66,7 +66,6 @@ object DirectKafkaWordCount {
     // dbutils.fs.put("/tmp/test_kafka_output",data,true)
           val message = new ProducerRecord[String, String](kafkaOpTopic, null, data)      
           producer.send(message)
-          System.out.println("# message = " + message)
         } )
         producer.close()
        })
