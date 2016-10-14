@@ -6,9 +6,10 @@ import org.apache.spark.{TaskContext, SparkConf}
 import org.apache.spark.streaming.kafka.{OffsetRange, HasOffsetRanges, KafkaUtils}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
+
 object DirectKafkaWordCount {
   def main(args: Array[String]): Unit = {
-    if (args.length < 2) {
+    if (args.length < 3) {
       System.err.println(s"""
         |Usage: DirectKafkaWordCount <brokers> <topics>
         |  <brokers> is a list of one or more Kafka brokers
@@ -18,8 +19,8 @@ object DirectKafkaWordCount {
       System.exit(1)
     }
 
-    val Array(brokers, topics) = args
-
+    val Array(brokers, topics, hostname) = args
+    System.out.println(hostname)
     // Create context with 10 second batch interval
     val sparkConf = new SparkConf().setAppName("DirectKafkaWordCount")
     val ssc = new StreamingContext(sparkConf, Seconds(10))
@@ -34,8 +35,9 @@ object DirectKafkaWordCount {
     val lines = messages.map(_._2)
     val words = lines.flatMap(_.split(" "))
     val wordCounts = words.map(x => (x, 1L)).reduceByKey(_ + _)
-    wordCounts.print()
-
+    wordCounts.print()   
+    wordCounts.foreachRDD(rdd => rdd.saveAsTextFile(args(2)))
+    
     // Start the computation
     ssc.start()
     ssc.awaitTermination()
